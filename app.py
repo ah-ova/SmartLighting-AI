@@ -10,11 +10,15 @@ import google.generativeai as genai # Подключаем настоящий И
 
 # --- ИНИЦИАЛИЗАЦИЯ НЕЙРОСЕТИ GEMINI ---
 try:
-    # Ключ берется из файла .streamlit/secrets.toml
-    genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-    gemini_model = genai.GenerativeModel('gemini-1.5-flash')
-    has_real_ai = True
-except Exception:
+    if "GOOGLE_API_KEY" in st.secrets:
+        genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+        gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+        has_real_ai = True
+    else:
+        st.error("Ключ GOOGLE_API_KEY не найден в Secrets!")
+        has_real_ai = False
+except Exception as e:
+    st.error(f"Ошибка ИИ: {e}") # ТУТ МЫ УВИДИМ ПРАВДУ
     has_real_ai = False
 
 # --- БАЗА ДАННЫХ РЕГИОНОВ АЗЕРБАЙДЖАНА ---
